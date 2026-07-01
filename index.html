@@ -1,0 +1,310 @@
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e60000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Essensplaner">
+  <title>Essensübersicht Kind</title>
+  <link rel="manifest" id="manifestLink">
+  <style>
+    :root{
+      --red:#e60000;
+      --red-dark:#b80000;
+      --dark:#1f1f1f;
+      --text:#2b2b2b;
+      --muted:#737373;
+      --bg:#f4f4f4;
+      --card:#ffffff;
+      --line:#e5e5e5;
+      --green:#118846;
+      --orange:#f59e0b;
+      --shadow:0 12px 28px rgba(0,0,0,.10);
+      --radius:18px;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#fff 0%,var(--bg) 42%,#ececec 100%);
+      color:var(--text);
+    }
+    .app{max-width:760px;margin:0 auto;min-height:100%;padding:14px 12px 90px}
+    .topbar{
+      position:sticky;top:0;z-index:10;
+      margin:-14px -12px 12px;
+      padding:14px 12px 12px;
+      background:linear-gradient(135deg,var(--red),var(--red-dark));
+      color:#fff;
+      box-shadow:0 6px 18px rgba(230,0,0,.22);
+    }
+    .topbar-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:12px}
+    .logo{
+      width:42px;height:42px;border-radius:14px;background:#fff;color:var(--red);
+      display:grid;place-items:center;font-weight:900;font-size:24px;box-shadow:0 8px 18px rgba(0,0,0,.18)
+    }
+    h1{font-size:19px;line-height:1.1;margin:0;font-weight:800;letter-spacing:-.2px}
+    .sub{font-size:12px;opacity:.9;margin-top:3px}
+    .card{
+      background:var(--card);border:1px solid rgba(0,0,0,.05);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:14px;margin-bottom:12px;
+    }
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .grid3{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    label{font-size:12px;color:var(--muted);font-weight:700;display:block;margin:0 0 6px}
+    select,input{
+      width:100%;height:44px;border:1px solid var(--line);border-radius:14px;background:#fff;
+      padding:0 12px;font-size:16px;color:var(--dark);outline:none;
+    }
+    select:focus,input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(230,0,0,.12)}
+    .money{position:relative}.money input{padding-right:42px}.money span{position:absolute;right:13px;bottom:12px;color:var(--muted);font-weight:700}
+    .summary{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .metric{background:#fafafa;border:1px solid var(--line);border-radius:16px;padding:11px;min-height:74px}
+    .metric b{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.metric strong{font-size:18px;color:var(--dark)}
+    .metric.rest{grid-column:1/-1;background:linear-gradient(135deg,#fff,#fff5f5);border-color:#ffd3d3}.metric.rest strong{font-size:24px;color:var(--red)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    button{
+      border:0;border-radius:15px;height:44px;padding:0 12px;font-size:14px;font-weight:800;cursor:pointer;
+      background:#fff;color:var(--dark);border:1px solid var(--line);
+    }
+    button.primary{background:var(--red);color:#fff;border-color:var(--red)}
+    button:active{transform:scale(.985)}
+    .days-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
+    .days-head h2{font-size:16px;margin:0}.count-pill{font-size:12px;font-weight:800;color:#fff;background:var(--dark);padding:7px 10px;border-radius:999px;white-space:nowrap}
+    .day-list{display:flex;flex-direction:column;gap:8px}
+    .day{
+      display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+      padding:10px;border-radius:16px;border:1px solid var(--line);background:#fff;
+    }
+    .day.nofood{background:#fff7f7;border-color:#ffc7c7}.datebox{width:54px;text-align:center;border-radius:13px;background:#f3f3f3;padding:7px 4px}.datebox .d{font-weight:900;font-size:18px;line-height:1}.datebox .m{font-size:11px;color:var(--muted);font-weight:800;margin-top:2px}.day-main strong{display:block;font-size:15px}.day-main span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+    .switch{position:relative;width:52px;height:32px}.switch input{display:none}.slider{position:absolute;inset:0;border-radius:999px;background:#cfcfcf;transition:.2s}.slider:before{content:"";position:absolute;width:26px;height:26px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.25);transition:.2s}.switch input:checked + .slider{background:var(--red)}.switch input:checked + .slider:before{transform:translateX(20px)}
+    .footer-nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));z-index:20}.footer-inner{max-width:760px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.footer-inner button{height:42px;font-size:13px}
+    .toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%) translateY(20px);opacity:0;background:#222;color:#fff;padding:10px 14px;border-radius:999px;font-size:13px;font-weight:700;transition:.25s;z-index:30;box-shadow:0 8px 22px rgba(0,0,0,.25)}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .hint{font-size:12px;color:var(--muted);line-height:1.35;margin-top:8px}.hidden{display:none!important}
+    @media(min-width:680px){.grid3{grid-template-columns:1fr 1fr 1fr}.summary{grid-template-columns:repeat(4,1fr)}.metric.rest{grid-column:auto}.actions{grid-template-columns:repeat(4,1fr)}}
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="topbar-inner"><div class="logo">E</div><div><h1>Essensübersicht Kind</h1><div class="sub">Privater Monatsplaner · offline speicherbar</div></div></div></div>
+  <main class="app">
+    <section class="card">
+      <div class="grid3">
+        <div><label for="month">Monat</label><select id="month"></select></div>
+        <div><label for="year">Jahr</label><input id="year" type="number" inputmode="numeric" min="2000" max="2099"></div>
+        <div class="money"><label for="rate">Tagessatz</label><input id="rate" type="text" inputmode="decimal" placeholder="4,99"><span>€</span></div>
+        <div class="money"><label for="flat">Pauschale</label><input id="flat" type="text" inputmode="decimal" placeholder="0,00"><span>€</span></div>
+      </div>
+      <div class="hint">Berechnung: Eigentlicher Monatswert − Pauschale − Kein-Essen-Wert = Restzahlung</div>
+    </section>
+
+    <section class="card summary" aria-live="polite">
+      <div class="metric"><b>Werktage Mo–Fr</b><strong id="workdays">0</strong></div>
+      <div class="metric"><b>Kein Essen</b><strong id="noFoodCount">0</strong></div>
+      <div class="metric"><b>Monatswert</b><strong id="monthValue">0,00 €</strong></div>
+      <div class="metric"><b>Kein-Essen-Wert</b><strong id="noFoodValue">0,00 €</strong></div>
+      <div class="metric rest"><b>Restzahlung</b><strong id="restValue">0,00 €</strong></div>
+    </section>
+
+    <section class="card">
+      <div class="actions">
+        <button class="primary" id="saveBtn">Speichern</button>
+        <button id="allOrderedBtn">Alle bestellt</button>
+        <button id="allNoFoodBtn">Alle kein Essen</button>
+        <button id="installBtn" class="hidden">Installieren</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="days-head"><h2>Werktage im Monat</h2><span class="count-pill" id="orderedPill">0 bestellt</span></div>
+      <div id="dayList" class="day-list"></div>
+    </section>
+  </main>
+
+  <nav class="footer-nav"><div class="footer-inner">
+    <button id="jsonBtn">JSON</button><button id="csvBtn">CSV</button><button id="resetBtn">Zurücksetzen</button>
+  </div></nav>
+  <div id="toast" class="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+  const APP_VERSION = '1.0.0';
+  const STORAGE_KEY = 'essensuebersicht.kind.v1';
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  const dayNames = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+  const $ = id => document.getElementById(id);
+  const state = loadState();
+  let currentDays = [];
+  let deferredPrompt = null;
+
+  function init(){
+    buildManifest();
+    registerServiceWorkerBestEffort();
+    fillMonths();
+    const now = new Date();
+    $('month').value = String(state.ui.month || now.getMonth()+1).padStart(2,'0');
+    $('year').value = state.ui.year || now.getFullYear();
+    $('rate').value = state.settings.rate || '4,99';
+    $('flat').value = state.settings.flat || '0,00';
+    bindEvents();
+    generateMonth();
+  }
+
+  function fillMonths(){
+    $('month').innerHTML = months.map((m,i)=>`<option value="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')} - ${m}</option>`).join('');
+  }
+
+  function bindEvents(){
+    ['month','year'].forEach(id => $(id).addEventListener('change', () => { saveUi(); generateMonth(); }));
+    ['rate','flat'].forEach(id => $(id).addEventListener('input', () => { saveSettings(); renderDays(); calculate(); }));
+    $('saveBtn').addEventListener('click', () => { saveAll(); toast('Gespeichert'); });
+    $('allOrderedBtn').addEventListener('click', () => setAll(false));
+    $('allNoFoodBtn').addEventListener('click', () => setAll(true));
+    $('jsonBtn').addEventListener('click', exportJSON);
+    $('csvBtn').addEventListener('click', exportCSV);
+    $('resetBtn').addEventListener('click', resetCurrentMonth);
+    $('installBtn').addEventListener('click', async () => { if(!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; $('installBtn').classList.add('hidden'); });
+    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; $('installBtn').classList.remove('hidden'); });
+    window.addEventListener('pagehide', saveAll);
+  }
+
+  function getSection(){ return `${$('year').value}-${$('month').value}`; }
+  function generateMonth(){
+    const year = parseInt($('year').value,10); const month = parseInt($('month').value,10);
+    if(!year || !month) return;
+    currentDays = [];
+    const d = new Date(year, month-1, 1);
+    while(d.getMonth() === month-1){
+      const wd = d.getDay();
+      if(wd >= 1 && wd <= 5){
+        const iso = toISODate(d);
+        currentDays.push({ iso, date: new Date(d), dayName: dayNames[wd] });
+      }
+      d.setDate(d.getDate()+1);
+    }
+    if(!state.months[getSection()]) state.months[getSection()] = { noFood: [] };
+    renderDays(); calculate(); saveUi(); saveState();
+  }
+
+  function renderDays(){
+    const section = getSection();
+    const noFoodSet = new Set((state.months[section] && state.months[section].noFood) || []);
+    const rate = moneyToNumber($('rate').value);
+    $('dayList').innerHTML = currentDays.map(day => {
+      const checked = noFoodSet.has(day.iso);
+      const dd = String(day.date.getDate()).padStart(2,'0');
+      const mm = String(day.date.getMonth()+1).padStart(2,'0');
+      return `<div class="day ${checked?'nofood':''}" data-iso="${day.iso}">
+        <div class="datebox"><div class="d">${dd}</div><div class="m">${mm}.${day.date.getFullYear()}</div></div>
+        <div class="day-main"><strong>${day.dayName}</strong><span>${checked?'Kein Essen bestellt':'Essen bestellt'} · ${checked?'0,00 €':formatEuro(rate)}</span></div>
+        <label class="switch" aria-label="Kein Essen bestellt"><input type="checkbox" ${checked?'checked':''}><span class="slider"></span></label>
+      </div>`;
+    }).join('');
+    document.querySelectorAll('.day input[type="checkbox"]').forEach(cb => cb.addEventListener('change', onToggleDay));
+  }
+
+  function onToggleDay(e){
+    const iso = e.target.closest('.day').dataset.iso;
+    const section = getSection();
+    const list = new Set(state.months[section]?.noFood || []);
+    e.target.checked ? list.add(iso) : list.delete(iso);
+    state.months[section] = { noFood: Array.from(list).sort() };
+    renderDays(); calculate(); saveState();
+  }
+
+  function calculate(){
+    const section = getSection();
+    const noFood = (state.months[section]?.noFood || []).length;
+    const total = currentDays.length;
+    const ordered = total - noFood;
+    const rate = moneyToNumber($('rate').value);
+    const flat = moneyToNumber($('flat').value);
+    const monthValue = total * rate;
+    const noFoodValue = noFood * rate;
+    const rest = monthValue - flat - noFoodValue;
+    $('workdays').textContent = total;
+    $('noFoodCount').textContent = noFood;
+    $('monthValue').textContent = formatEuro(monthValue);
+    $('noFoodValue').textContent = formatEuro(noFoodValue);
+    $('restValue').textContent = formatEuroSigned(rest);
+    $('orderedPill').textContent = `${ordered} bestellt`;
+  }
+
+  function setAll(noFood){
+    const section = getSection();
+    state.months[section] = { noFood: noFood ? currentDays.map(d=>d.iso) : [] };
+    renderDays(); calculate(); saveState(); toast(noFood ? 'Alle auf kein Essen gesetzt' : 'Alle auf bestellt gesetzt');
+  }
+
+  function resetCurrentMonth(){
+    if(!confirm('Diesen Monat zurücksetzen?')) return;
+    delete state.months[getSection()];
+    generateMonth(); toast('Monat zurückgesetzt');
+  }
+
+  function saveUi(){ state.ui.month = $('month').value; state.ui.year = $('year').value; }
+  function saveSettings(){ state.settings.rate = $('rate').value; state.settings.flat = $('flat').value; saveState(); }
+  function saveAll(){ saveUi(); saveSettings(); saveState(); }
+  function loadState(){
+    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {settings:{},ui:{},months:{}}; }
+    catch(e){ return {settings:{},ui:{},months:{}}; }
+  }
+  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+  function moneyToNumber(v){
+    v = String(v ?? '').replace(/EUR|€/gi,'').replace(/\s/g,'').replace(/\+/g,'').replace(',', '.');
+    const n = parseFloat(v); return Number.isFinite(n) ? n : 0;
+  }
+  function formatEuro(n){ return (Number(n)||0).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+  function formatEuroSigned(n){ return n > 0 ? '+' + formatEuro(n) : n < 0 ? '-' + formatEuro(Math.abs(n)) : '0,00 €'; }
+  function toISODate(d){ return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`; }
+  function displayDate(iso){ return `${iso.slice(6,8)}.${iso.slice(4,6)}.${iso.slice(0,4)}`; }
+  function escapeCsv(v){ v = String(v ?? ''); return /[;"\n\r]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; }
+
+  function getExportData(){
+    const section = getSection(); const noFoodSet = new Set(state.months[section]?.noFood || []);
+    const rate = moneyToNumber($('rate').value); const flat = moneyToNumber($('flat').value);
+    const rows = currentDays.map(d => ({
+      Datum: displayDate(d.iso), Tag: d.dayName,
+      Status: noFoodSet.has(d.iso) ? 'Kein Essen bestellt' : 'Essen bestellt',
+      Preis: noFoodSet.has(d.iso) ? '0,00 €' : formatEuro(rate)
+    }));
+    const noFood = noFoodSet.size, total = currentDays.length;
+    return { app:'Essensübersicht Kind', version:APP_VERSION, monat:section, tagessatz:formatEuro(rate), pauschale:formatEuro(flat), werktage:total, essenBestellt:total-noFood, keinEssen:noFood, eigentlicherMonatswert:formatEuro(total*rate), keinEssenWert:formatEuro(noFood*rate), restzahlung:formatEuroSigned(total*rate-flat-noFood*rate), tage:rows };
+  }
+  function exportJSON(){ download(`Essensuebersicht_${getSection()}.json`, JSON.stringify(getExportData(), null, 2), 'application/json;charset=utf-8'); }
+  function exportCSV(){
+    const data = getExportData();
+    let csv = 'Datum;Tag;Status;Preis\r\n' + data.tage.map(r => [r.Datum,r.Tag,r.Status,r.Preis].map(escapeCsv).join(';')).join('\r\n');
+    csv += '\r\n\r\n';
+    [['Werktage Mo-Fr',data.werktage],['Essen bestellt',data.essenBestellt],['Kein Essen',data.keinEssen],['Tagessatz',data.tagessatz],['Eigentlicher Monatswert',data.eigentlicherMonatswert],['Pauschale',data.pauschale],['Kein-Essen-Wert',data.keinEssenWert],['Restzahlung',data.restzahlung]].forEach(r => csv += `${escapeCsv(r[0])};${escapeCsv(r[1])};;;\r\n`);
+    download(`Essensuebersicht_${getSection()}.csv`, '\ufeff' + csv, 'text/csv;charset=utf-8');
+  }
+  function download(filename, content, type){
+    const blob = new Blob([content], {type}); const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 500); toast('Export erstellt');
+  }
+  function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast.timer); toast.timer=setTimeout(()=>t.classList.remove('show'),1800); }
+
+  function buildManifest(){
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="110" fill="#e60000"/><text x="256" y="328" text-anchor="middle" font-family="Arial" font-size="245" font-weight="900" fill="white">E</text></svg>`;
+    const icon = 'data:image/svg+xml;base64,' + btoa(svg);
+    const manifest = {name:'Essensübersicht Kind',short_name:'Essensplaner',start_url:'.',display:'standalone',background_color:'#f4f4f4',theme_color:'#e60000',icons:[{src:icon,sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}]};
+    $('manifestLink').href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
+  }
+  function registerServiceWorkerBestEffort(){
+    if(!('serviceWorker' in navigator) || location.protocol === 'file:') return;
+    const sw = `const CACHE='essensplaner-v1';self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])).then(()=>self.skipWaiting()))});self.addEventListener('activate',e=>{e.waitUntil(self.clients.claim())});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{const copy=resp.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return resp}).catch(()=>caches.match('./'))))});`;
+    try{ navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{}); }catch(e){}
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
